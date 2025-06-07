@@ -1,40 +1,16 @@
 {extends '../@layout.latte'}
 
 {block title}
-    Homepage - Favorite Items
+    
 {/block}
 
 {block additionalCSS}
-    <link rel="stylesheet" href="/Resources/css/items_start.css" />
+    <link rel="stylesheet" href="/Resources/assets/css/construction.css" />
 {/block}
 
 {block content}
-    <div class="heading">
-        <div class="title">
-            {if $user}
-            <h1>Hello <span class="highlight">{$user->getUserName()}</span></h1>
-            <h2>Favorite Items</h2>
-            {else}
-            <h1>Homepage</span></h1>
-            <h2>Random Items (log in to customize pinned items)</h2>
-            {/if} 
-        </div>
-    </div>
-    <div id="itemsContainer" class="start">
-        <div class="items-wrap">
-        {if $items and count($items)}
-            {foreach $items as $key => $item}
-                {include 'partials/_item-start.latte' item => $item, key => $key}
-            {/foreach}
-        {else}
-            {if $user}
-                <h2 class="highlight">No favorites saved.</h2>
-            {else}
-                <h2 class="highlight">No items found. Probably rate limited.</h2>
-            {/if}
-        {/if}
-        </div>
-    </div>
+    <span id="dstwre" class="chromatic">.dstwre</span>
+    <p id="desc" class="chromatic">{ under construction }</p>
 {/block}
 
 {block footer}

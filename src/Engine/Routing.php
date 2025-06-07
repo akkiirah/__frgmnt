@@ -2,6 +2,12 @@
 
 namespace Frgmnt\Engine;
 
+use Frgmnt\Http\Request;
+use Frgmnt\Http\Response;
+use Frgmnt\Controller\AuthController;
+use Frgmnt\Controller\PageController;
+use Frgmnt\Controller\SiteController;
+
 /**
  * Routes HTTP requests to the appropriate controller and action.
  *
@@ -13,85 +19,59 @@ namespace Frgmnt\Engine;
  */
 class Routing
 {
-    protected string $controller = '';
-    protected string $action = '';
-    protected array $params = [];
+    private Request $request;
+    private Response $response;
+    private array $routes = [];
 
-    /**
-     * Initializes the controller, action, and parameters from the HTTP request.
-     *
-     * Uses GET parameters for the controller and action names.
-     * Assigns POST data to parameters if the request method is POST; otherwise, parses the GET parameter params.
-     *
-     * @return void
-     */
     public function __construct()
     {
-        $this->controller = isset($_GET['controller']) ? $_GET['controller'] : 'Site';
-        $this->action = isset($_GET['action']) ? $_GET['action'] : 'Start';
-        $this->params = ($_SERVER['REQUEST_METHOD'] === 'POST')
-            ? $_POST
-            : (isset($_GET['params']) ? $this->parseParams($_GET['params']) : []);
+        $this->request = new Request();
+        $this->response = new Response();
+        $this->defineRoutes();
     }
 
     /**
-     * Dispatches the HTTP request to the designated controller and action.
-     *
-     * Constructs the controller class name and action method name,
-     * instantiates the controller, and invokes the action method with the parsed parameters.
-     * Outputs an error message if the controller or action does not exist.
-     *
-     * @return void
+     * Define all application routes.
+     */
+    private function defineRoutes(): void
+    {
+        // Public site
+        $this->addRoute('GET', '/', [SiteController::class, 'startAction']);
+
+        // Authentication
+        $this->addRoute('GET', '/core', [AuthController::class, 'loginAction']);
+        $this->addRoute('POST', '/core', [AuthController::class, 'loginAction']);
+
+        // Page management in admin
+        $this->addRoute('GET', '/core/pages', [PageController::class, 'listAction']);
+        $this->addRoute('GET', '/core/pages/edit', [PageController::class, 'editAction']);
+        $this->addRoute('POST', '/core/pages/save', [PageController::class, 'saveAction']);
+    }
+
+    /**
+     * Register a new route.
+     */
+    private function addRoute(string $method, string $path, array $handler): void
+    {
+        $normalized = rtrim($path, '/') ?: '/';
+        $this->routes[$method][$normalized] = $handler;
+    }
+
+    /**
+     * Dispatch the current request to the matching handler.
      */
     public function route(): void
     {
-        $controllerClass = 'Frgmnt\Controller\\' . $this->controller . 'Controller';
-        $actionMethod = $this->action . 'Action';
+        $method = $this->request->getMethod();
+        $path = rtrim($this->request->getUri(), '/') ?: '/';
 
-        if (class_exists($controllerClass)) {
-            if (method_exists($controllerClass, $actionMethod)) {
-                $controllerInstance = new $controllerClass();
-                $controllerInstance->$actionMethod($this->params);
-            } else {
-                echo 'Oops, method ' . $actionMethod . ' does not exist';
-            }
+        if (isset($this->routes[$method][$path])) {
+            [$controllerClass, $action] = $this->routes[$method][$path];
+            $controller = new $controllerClass($this->request, $this->response);
+            $controller->$action();
         } else {
-            echo 'Oops, controller ' . $controllerClass . ' does not exist';
+            $this->response->setStatus(404);
+            $this->response->write('404 Not Found');
         }
-    }
-
-    /**
-     * Parses a parameter string into an associative array.
-     *
-     * Converts a string formatted as "{key:value1-value2, key2:value3-value4, ...}" into an array.
-     * Each key is associated with an array of values; numeric strings are cast to integers.
-     *
-     * @param string $paramsStr Parameter string to parse.
-     * @return array<string, array<int, string|int>> Parsed parameters.
-     */
-    private function parseParams($paramsStr): array
-    {
-        $paramsStr = trim($paramsStr, '[]');
-        $result = [];
-        $pairs = explode(',', $paramsStr);
-        foreach ($pairs as $pair) {
-            $pair = trim($pair);
-            if (empty($pair)) {
-                continue;
-            }
-            $parts = explode(':', $pair, 2);
-            if (count($parts) < 2) {
-                continue;
-            }
-            $key = trim($parts[0]);
-            $valueStr = trim($parts[1]);
-            $values = explode('-', $valueStr);
-            $values = array_map(function ($value) {
-                $value = trim($value);
-                return (filter_var($value, FILTER_VALIDATE_INT) !== false) ? (int) $value : $value;
-            }, $values);
-            $result[$key] = $values;
-        }
-        return $result;
     }
 }

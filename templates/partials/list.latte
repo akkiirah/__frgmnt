@@ -1,0 +1,18 @@
+{extends '../@layout.latte'}
+
+{block title}
+    
+{/block}
+
+{block additionalCSS} 
+    <link rel="stylesheet" href="/Resources/assets/css/core.css" />
+{/block}
+
+{block content}
+    <h1>Seitenübersicht</h1>
+    {include 'pageTree.latte' nodes => $pages}
+{/block}
+
+{block footer}
+    {include 'partials/footer.latte'}
+{/block}

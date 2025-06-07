@@ -13,62 +13,14 @@ namespace Frgmnt\View;
 class LatteViewRenderer extends AbstractViewRenderer
 {
     /**
-     * Renders the list view using the provided parameters.
+     * Render a Latte template and return the output as string.
      *
-     * @param array $params An associative array of parameters for the view.
-     * @return void
+     * @param string $template Path relative to the templates directory, including subfolder and extension, e.g. 'pages/login.latte'.
+     * @param array  $params   Variables to pass into the template.
+     * @return string          Rendered HTML.
      */
-    public function renderList(array $params): void
+    public function render(string $template, array $params = []): string
     {
-        $this->latte->render($this->fileList, $params);
-        $output = $this->latte->renderToString($this->fileList, $params);
-    }
-
-    /**
-     * Renders the start view using the provided parameters.
-     *
-     * @param array $params An associative array of parameters for the view.
-     * @return void
-     */
-    public function renderStart(array $params): void
-    {
-        $this->latte->render($this->fileStart, $params);
-        $output = $this->latte->renderToString($this->fileStart, $params);
-    }
-
-    /**
-     * Renders the detail view using the provided parameters.
-     *
-     * @param array $params An associative array of parameters for the view.
-     * @return void
-     */
-    public function renderDetail(array $params): void
-    {
-        $this->latte->render($this->fileDetail, $params);
-        $output = $this->latte->renderToString($this->fileDetail, $params);
-    }
-
-    /**
-     * Renders the login view using the provided parameters.
-     *
-     * @param array $params An associative array of parameters for the view.
-     * @return void
-     */
-    public function renderLogin(array $params): void
-    {
-        $this->latte->render($this->fileLogin, $params);
-        $output = $this->latte->renderToString($this->fileLogin, $params);
-    }
-
-    /**
-     * Renders the register view using the provided parameters.
-     *
-     * @param array $params An associative array of parameters for the view.
-     * @return void
-     */
-    public function renderRegister(array $params): void
-    {
-        $this->latte->render($this->fileRegister, $params);
-        $output = $this->latte->renderToString($this->fileRegister, $params);
+        return $this->latte->renderToString($template, $params);
     }
 }

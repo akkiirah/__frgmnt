@@ -1,0 +1,18 @@
+$max-depth: 8;
+
+ul>li>a {
+    color: $clr-text;
+}
+
+@for $i from 1 through $max-depth {
+    $selector: '.page-tree > li';
+
+    @for $j from 2 through $i {
+        $selector: '#{$selector} > ul.page-tree > li';
+    }
+
+    #{$selector}>a.page-link {
+        margin-left: ($i - 1) * 1rem;
+        color: darken($clr-text, ($i - 1) * 10%);
+    }
+}

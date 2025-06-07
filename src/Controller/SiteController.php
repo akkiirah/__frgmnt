@@ -1,21 +1,32 @@
 <?php
 namespace Frgmnt\Controller;
 
+use Frgmnt\Http\Request;
+use Frgmnt\Http\Response;
 use Frgmnt\View\LatteViewRenderer;
 
+/**
+ * Handles public-facing pages like the home (start) page.
+ */
 class SiteController
 {
-    protected ?LatteViewRenderer $frontendViewhelper;
+    private Request $request;
+    private Response $response;
+    private LatteViewRenderer $view;
 
-    public function __construct()
+    public function __construct(Request $request, Response $response)
     {
-        $this->frontendViewhelper = new LatteViewRenderer();
+        $this->request = $request;
+        $this->response = $response;
+        $this->view = new LatteViewRenderer();
     }
 
-    public function startAction(array $params): void
+    /**
+     * Render the start (home) page.
+     */
+    public function startAction(): void
     {
-
-        $templateParams = array_merge(['action' => __FUNCTION__, 'user' => $_SESSION['user'] ?? null,]);
-        $this->frontendViewhelper->renderStart($templateParams);
+        $html = $this->view->render(\Frgmnt\Config\Constants::DIR_TEMPLATES . '/start.latte', []);
+        $this->response->write($html);
     }
 }
