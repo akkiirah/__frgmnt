@@ -1,0 +1,29 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+        <link rel="stylesheet" href="/Resources/css/main.css" />
+		{block additionalCSS}{/block}
+        <title>{block title|stripHtml|trim}{/block} - Patrigios Market Analytics</title>    
+		<link rel="icon" type="image/x-icon" href="Resources/assets/logos/favicon.ico">
+	</head> 
+
+	<body>
+    	{include 'header.latte'}
+
+		<main class="content-wrap">
+			<span id="dstwre" class="chromatic">.dstwre</span>
+			<p id="desc" class="chromatic">{ under construction }</p>
+		</main>
+
+		<footer class="footer-wrap">
+            <div class="max-width-layout">
+			    {include 'footer.latte'}
+            </div>
+		</footer>
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@1.2.1"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.1.0"></script>
+        <script type="module" src="/Resources/js/main.js"></script>
+	</body>
+</html>
