@@ -9,7 +9,7 @@ As of now, still in heavy development.
 
 This project is licensed under JNK 1.1 - an Anti-Capitalist, Share-Alike, Post-Open-Source license.
 
-Use it, remix it, break it, rebuild it, make something your own and share it with the world.
+Use it, remix it, break it, rebuild it, make something your own and share it with the world.  
 Just don’t sell it. Don’t lock it behind paywalls. Don’t wrap it in ads, NFTs, AI scraping, or subscription garbage.  
 
 If you extend or modify this work, release your version under the same license.  
