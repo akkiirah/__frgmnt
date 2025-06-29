@@ -78,7 +78,7 @@ class Routing
         if (isset($this->routes[$method][$path])) {
             [$controllerClass, $action] = $this->routes[$method][$path];
             $controller = new $controllerClass($this->request, $this->response);
-            $controller->$action();
+            $controller->$action($this->request, $this->response);
         } else {
             $this->response->setStatus(404);
             $this->response->write('404 Not Found');

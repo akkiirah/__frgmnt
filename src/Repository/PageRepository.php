@@ -30,8 +30,17 @@ class PageRepository
             ->prepare('SELECT * FROM pages WHERE id = ?');
         $stmt->execute([$id]);
         $stmt->setFetchMode(\PDO::FETCH_CLASS, Page::class);
-        return $stmt->fetch() ?: null;
+        $page = $stmt->fetch() ?: null;
+
+        if ($page) {
+            $stmt = Database::getConnection()
+                ->prepare('SELECT * FROM content_elements WHERE page_id = ? ORDER BY position');
+            $stmt->execute([$page->id]);
+            $page->content_elements = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+        return $page;
     }
+
 
     public function save(Page $page): void
     {

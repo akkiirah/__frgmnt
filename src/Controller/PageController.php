@@ -44,14 +44,28 @@ class PageController
 
         $tree = $this->buildTree($flat);
 
-        echo $this->view->render(\Frgmnt\Config\Constants::DIR_TEMPLATES . '/list.latte', ['pages' => $tree]);
+        $selectedId = $this->request->getQuery('id');
+        $selectedPage = null;
+
+        if ($selectedId) {
+            $selectedPage = $this->repo->fetchById((int) $selectedId);
+        }
+
+        echo $this->view->render(\Frgmnt\Config\Constants::DIR_TEMPLATES . '/core.latte', [
+            'pages' => $tree,
+            'page' => $selectedPage
+        ]);
     }
 
     public function editAction(Request $req, Response $res)
     {
         $id = (int) $req->getQuery('id');
         $page = $this->repo->fetchById($id) ?: new \Frgmnt\Model\Page();
-        echo $this->view->render(\Frgmnt\Config\Constants::DIR_TEMPLATES . '/edit.latte', ['page' => $page]);
+
+        if ($req->isAjax()) {
+            echo $this->view->render(\Frgmnt\Config\Constants::DIR_TEMPLATES . '/_edit.latte', ['page' => $page]);
+            return;
+        }
     }
 
     public function saveAction(Request $req, Response $res)
@@ -60,7 +74,6 @@ class PageController
         $page->id = (int) $req->getPost('id');
         $page->parent_id = $req->getPost('parent_id') ?: null;
         $page->title = $req->getPost('title');
-        $page->content = $req->getPost('content');
         $this->repo->save($page);
         $res->redirect('/core/pages');
     }

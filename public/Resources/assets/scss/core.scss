@@ -16,3 +16,32 @@
 @import 'base/_debug';
 
 @import 'components/_pagetree';
+
+.split-view {
+    display: flex;
+    gap: 2rem;
+    margin: 1rem;
+
+    div {
+        background-color: $clr-base;
+    }
+
+    .sidebar {
+        padding-block: 1rem;
+        padding-inline: 3rem;
+    }
+
+    .editor {
+        width: 100%;
+        fieldset {
+            display: flex;
+            flex-direction: column;
+            padding: .5rem;
+            gap: .25rem;
+        }
+
+        legend {
+            font-size: $font-size-1l;
+        }
+    }
+}

@@ -1,0 +1,44 @@
+{*
+ * Licensed under JNK 1.1 — an anti-capitalist, share-alike license.
+ *
+ * Freely remix, learn, rebuild — just don’t sell or lock it down.
+ * Derivatives must stay free and link back to the source.
+ *
+ * Full license: https://dstwre.sh/license
+ *}
+
+
+<form method="post" action="/core/content/save">
+    <fieldset>
+        <legend>{$element['internal_name']}</legend>
+        <div class="form-extras">
+            <span>id: {$element['id']}</span>
+            <span>pid: {$element['page_id']}</span>
+        </div>
+
+        {* TODO: switch to dropdown with all available options and reload *}
+        <label for="type">Typ:</label>
+        <input type="text" name="type" value="{$element['type']}"> 
+
+        <label for="position">Position:</label>
+        <input type="number" name="position" value="{$element['position']}">
+
+        <label for="headline">Headline:</label>
+        <input type="text" name="headline" value="{$element['headline']}">
+
+        <label for="subheadline">Subheadline:</label>
+        <input type="text" name="subheadline" value="{$element['subheadline']}">
+
+        <label for="body">Content:</label>
+        <textarea name="body">{$element['body']}</textarea>
+
+        <label for="image_path">Imagepath:</label>
+        <input type="text" name="image_path" value="{$element['image_path']}">
+
+        {* TODO: show/hide depending on type and add functionality to parse json *}
+        <label for="special_data_json">Json Data:</label>
+        <textarea name="special_data_json">{$element['special_data_json']}</textarea>
+
+        <button type="submit">Save</button>
+    </fieldset>
+</form>

@@ -14,13 +14,15 @@
     
 {/block}
 
-{block additionalCSS}
-    <link rel="stylesheet" href="/Resources/assets/css/construction.css" />
+{block additionalCSS} 
+    <link rel="stylesheet" href="/Resources/assets/css/core.css" />
 {/block}
 
 {block content}
-    <span id="dstwre" class="chromatic">.dstwre</span>
-    <p id="desc" class="chromatic">{ under construction }</p>
+    <div class="split-view">
+        {include '_list.latte'}
+        {include '_edit.latte'}
+    </div>
 {/block}
 
 {block footer}
