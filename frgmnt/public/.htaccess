@@ -1,8 +1,6 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteBase /
-
-  RewriteRule ^frgmnt(/.*)?$ - [L]
+  RewriteBase /frgmnt/
 
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d

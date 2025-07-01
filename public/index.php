@@ -18,13 +18,12 @@ session_set_cookie_params([
     'path' => '/',
     'secure' => true,
     'httponly' => true,
-    'samesite' => 'Strict'
+    'samesite' => 'Strict',
 ]);
 session_start();
 
+use Frgmnt\Bootstrap;
 
-use Frgmnt\Engine\Routing;
+$app = Bootstrap::create();
 
-$routing = new Routing();
-
-$routing->route();
+$app->run();

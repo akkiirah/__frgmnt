@@ -1,0 +1,22 @@
+{*
+ * Licensed under JNK 1.1 — an anti-capitalist, share-alike license.
+ *
+ * Freely remix, learn, rebuild — just don’t sell or lock it down.
+ * Derivatives must stay free and link back to the source.
+ *
+ * Full license: https://dstwre.sh/license
+ *}
+
+
+<ul class="page-tree">
+  {foreach $nodes as $page}
+    <li class="page-item">
+      <a class="page-link" href="#" data-id="{$page->getId()}">
+        {$page->getTitle()|escape}
+      </a>
+      {if !empty($page->children)}
+        {include 'pageTree.latte' nodes => $page->children}
+      {/if}
+    </li>
+  {/foreach}
+</ul>

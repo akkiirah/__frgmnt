@@ -1,13 +1,15 @@
 {
     "name": "akkiirah/frgmnt",
+    "version": "1.0.0",
     "description": "Lightweight DIY-CMS Core with Latte integration",
-    "type": "library",
-    "require": {
-        "latte/latte": "^3.0"
-    },
     "autoload": {
         "psr-4": {
-            "Frgmnt\\": "src/" 
+            "Frgmnt\\": "frgmnt/src/",
+            "App\\": "app/src/"
         }
+    },
+    "require": {
+        "php": ">=8.0",
+        "latte/latte": "^3.0"
     }
 }

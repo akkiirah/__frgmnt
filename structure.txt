@@ -1,44 +1,82 @@
 .:
+app
 composer.json
 composer.lock
 dstwre.conf
+frgmnt
 phpmyadmin
 public
-Resources
-src
+structured.txt
 structure.txt
-templates
 vendor
 
-./public:
-index.php
+./app:
+public
+templates
+
+./app/public:
+
+./app/templates:
+footer.latte
+header.latte
+@layout.latte
+partials
+
+./app/templates/partials:
+core.latte
+_edit.latte
+_list.latte
+login.latte
+page.latte
+_pageTree.latte
+_standard.latte
+start.latte
+
+./frgmnt:
+Cache
+Config
 Resources
+src
+templates
 
-./public/Resources:
+./frgmnt/Cache:
+templates
+
+./frgmnt/Cache/templates:
+
+./frgmnt/Config:
+Cache
+Constants.php
+
+./frgmnt/Config/Cache:
+templates
+
+./frgmnt/Config/Cache/templates:
+
+./frgmnt/Resources:
 assets
-css
 
-./public/Resources/assets:
+./frgmnt/Resources/assets:
 css
 fonts
 img
 js
 scss
 
-./public/Resources/assets/css:
+./frgmnt/Resources/assets/css:
 construction.css
 core.css
 main.css
 
-./public/Resources/assets/fonts:
+./frgmnt/Resources/assets/fonts:
 FiraCode
 Nunito
 
-./public/Resources/assets/fonts/FiraCode:
+./frgmnt/Resources/assets/fonts/FiraCode:
 FiraCode-VF.ttf
 _stylesheet.scss
 
-./public/Resources/assets/fonts/Nunito:
+./frgmnt/Resources/assets/fonts/Nunito:
 Nunito-BlackItalic.woff
 Nunito-BlackItalic.woff2
 Nunito-Black.woff
@@ -73,58 +111,44 @@ Nunito-SemiBold.woff
 Nunito-SemiBold.woff2
 _stylesheet.scss
 
-./public/Resources/assets/img:
+./frgmnt/Resources/assets/img:
 Neuer Ordner
 
-./public/Resources/assets/img/Neuer Ordner:
+./frgmnt/Resources/assets/img/Neuer Ordner:
 
-./public/Resources/assets/js:
+./frgmnt/Resources/assets/js:
 main.js
 
-./public/Resources/assets/scss:
+./frgmnt/Resources/assets/scss:
 abstracts
 base
 components
 construction.scss
 core.scss
-main copy.scss
 main.scss
 
-./public/Resources/assets/scss/abstracts:
+./frgmnt/Resources/assets/scss/abstracts:
 _config.scss
 _fonts.scss
 _mixins.scss
 
-./public/Resources/assets/scss/base:
+./frgmnt/Resources/assets/scss/base:
 _base.scss
 _construction.scss
 _debug.scss
 
-./public/Resources/assets/scss/components:
-_button copy.scss
+./frgmnt/Resources/assets/scss/components:
 _button.scss
 _pagetree.scss
-pagetree.scss
 
-./public/Resources/css:
-construction.css
-core.css
-main.css
-
-./Resources:
-css
-
-./Resources/css:
-construction.css
-core.css
-main.css
-
-./src:
+./frgmnt/src:
+Bootstrap.php
 Cache
 Config
+Container.php
 Controller
+db
 Engine
-http
 Http
 Local
 Model
@@ -133,81 +157,80 @@ Service
 Util
 View
 
-./src/Cache:
+./frgmnt/src/Cache:
 templates
 
-./src/Cache/templates:
-footer.latte--070c6585b5.php
-footer.latte--070c6585b5.php.lock
-header.latte--d01367ec1d.php
-header.latte--d01367ec1d.php.lock
-@layout.latte--2b6c8f0d86.php
-@layout.latte--2b6c8f0d86.php.lock
-page.latte--794b2e8f41.php
-page.latte--794b2e8f41.php.lock
+./frgmnt/src/Cache/templates:
 
-./src/Config:
+./frgmnt/src/Config:
+Cache
 Constants.php
 
-./src/Controller:
+./frgmnt/src/Config/Cache:
+templates
+
+./frgmnt/src/Config/Cache/templates:
+
+./frgmnt/src/Controller:
 AuthController.php
+BaseController.php
 PageController.php
 SiteController.php
-UserController.php
 
-./src/Engine:
+./frgmnt/src/db:
+
+./frgmnt/src/Engine:
 Routing.php
 
-./src/http:
+./frgmnt/src/Http:
 Request.php
 Response.php
 
-./src/Http:
-Request.php
-Response.php
-
-./src/Local:
+./frgmnt/src/Local:
 AbstractLocalRepository.php
 
-./src/Model:
+./frgmnt/src/Model:
 ContentElement.php
 Page.php
 
-./src/Repository:
-Database.php
+./frgmnt/src/Repository:
 PageRepository.php
 
-./src/Service:
+./frgmnt/src/Service:
 AuthService.php
 Database.php
+LatteFilterProvider.php
+LatteViewRenderer.php
 
-./src/Util:
+./frgmnt/src/Util:
 Debug.php
 
-./src/View:
+./frgmnt/src/View:
 AbstractViewRenderer.php
 LatteFilterProvider.php
 LatteViewRenderer.php
 
-./templates:
+./frgmnt/templates:
 footer.latte
 header.latte
 @layout.latte
 partials
 
-./templates/partials:
-_core.latte
+./frgmnt/templates/partials:
 core.latte
 _edit.latte
-edit.latte
 _list.latte
-list.latte
 login.latte
 page.latte
 _pageTree.latte
-pageTree.latte
 _standard.latte
 start.latte
+
+./public:
+frgmnt
+index.php
+
+./public/frgmnt:
 
 ./vendor:
 autoload.php

@@ -1,0 +1,21 @@
+project-root/
+├── core/                     # = Dein Mini-CMS-Kern
+│   ├── src/                  #   PHP-Code: Routing, Controller, Repo, Model, Service
+│   ├── templates/            #   Latte-Views für das Backend (Admin-UI)
+│   ├── public/               #   JS/CSS/Images für die Admin-UI
+│   └── composer.json         #   (optional) Autoloading, Abhängigkeiten nur für core
+│
+├── app/                      # = Projekt-Frontend
+│   ├── templates/            #   Latte-Views für die öffentliche Seite
+│   ├── public/               #   CSS/JS/Images für die Frontend-Site
+│   ├── config/               #   env-dateien, site-einstellungen
+│   └── src/                  #   ggf. eigene Controller/Services, die auf core aufsetzen
+│
+├── public/                   # = Web-Root
+│   ├── index.php             #   lädt core/bootstrap + app/config
+│   ├── css/                  #   Symlink zu ../app/public/css
+│   └── admin/                #   Symlink zu ../core/public
+│
+├── vendor/                   # Composer
+├── composer.json             # Haupt-Autoloading (PSR-4: "Core\\" => "core/src/", "App\\"=>"app/src/")
+└── readme.md
