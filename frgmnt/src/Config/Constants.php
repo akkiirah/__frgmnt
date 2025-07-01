@@ -23,8 +23,8 @@ class Constants
 
     // Paths for templates and cache
     public const DIR_CACHE = self::ROOT_DIR . 'templates/cache';
-    public const DIR_TEMPLATES_FRONTEND = self::ROOT_DIR . '../app/templates/partials/';
-    public const DIR_TEMPLATES_BACKEND = self::ROOT_DIR . 'templates/partials/';
+    public const DIR_TEMPLATES_FRONTEND = self::ROOT_DIR . '../public/app/templates/partials';
+    public const DIR_TEMPLATES_BACKEND = self::ROOT_DIR . 'templates/partials';
 
     // Public asset directories (within frgmnt/public)
     public const ASSET_CSS = '/frgmnt/assets/css/';
