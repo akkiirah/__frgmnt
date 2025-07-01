@@ -1,0 +1,35 @@
+
+{extends '../@layout.latte'}
+
+{block title}
+    
+{/block}
+
+{block additionalCSS}
+{/block}
+
+{block content}
+    <h1>{$page->getTitle()}</h1>
+    <div>
+        {foreach $page->getContentElements() as $element}
+            <div class="content-element">
+                <p>{$element->getId()}</p> 
+                <p>{$element->getPageId()}</p> 
+                <p>{$element->getType()}</p> 
+                <p>{$element->getInternalName()}</p> 
+                <p>{$element->getPosition()}</p> 
+                <p>{$element->getHeadline()}</p> 
+                <p>{$element->getSubheadline()}</p> 
+                <p>{$element->getBody()}</p> 
+                <p>{$element->getImagePath()}</p> 
+                <p>{$element->getSpecialDataJson()}</p> 
+                <p>{$element->getCreatedAt()}</p> 
+                <p>{$element->getUpdatedAt()}</p> 
+            </div>
+        {/foreach}
+    </div>
+{/block}
+
+{block footer}
+    {include 'partials/footer.latte'}
+{/block}

@@ -17,6 +17,7 @@ use Frgmnt\Http\Response;
 use Frgmnt\Controller\AuthController;
 use Frgmnt\Controller\PageController;
 use Frgmnt\Controller\SiteController;
+use Frgmnt\Repository\PageRepository;
 
 /**
  * Routes HTTP requests to the appropriate controller and action.
@@ -56,6 +57,52 @@ class Routing
         $this->addRoute('GET', '/core/pages', [PageController::class, 'listAction']);
         $this->addRoute('GET', '/core/pages/edit', [PageController::class, 'editAction']);
         $this->addRoute('POST', '/core/pages/save', [PageController::class, 'saveAction']);
+
+        $this->defineDynamicPageRoutes();
+    }
+
+    private function defineDynamicPageRoutes(): void
+    {
+        $repo = new PageRepository();
+        $pages = $repo->fetchAll();
+
+        // 2.1) Aufbau eines ID-basierten Lookup-Trees
+        $lookup = [];
+        foreach ($pages as $p) {
+            $p->children = [];
+            $lookup[$p->getId()] = $p;
+        }
+        $tree = [];
+        foreach ($lookup as $p) {
+            if ($p->getParent_id() && isset($lookup[$p->getParent_id()])) {
+                $lookup[$p->getParent_id()]->children[] = $p;
+            } else {
+                $tree[] = $p;
+            }
+        }
+
+        // 2.2) Top-Level durchgehen: Home-Slug überspringen
+        foreach ($tree as $node) {
+            if ($node->getSlug() === 'home') {
+                // Home selbst bleibt unter "/", Kinder starten bei ""
+                $this->addPageRoutesRecursive($node->children, '');
+            } else {
+                // alle anderen Top-Level-Seiten bekommen "/slug"
+                $this->addRoute('GET', '/' . $node->slug, [SiteController::class, 'showAction']);
+                $this->addPageRoutesRecursive($node->children, '/' . $node->slug);
+            }
+        }
+    }
+
+    private function addPageRoutesRecursive(array $nodes, string $prefix): void
+    {
+        foreach ($nodes as $node) {
+            $path = $prefix . '/' . $node->getSlug();
+            $this->addRoute('GET', $path, [SiteController::class, 'showAction']);
+            if ($node->children) {
+                $this->addPageRoutesRecursive($node->children, $path);
+            }
+        }
     }
 
     /**

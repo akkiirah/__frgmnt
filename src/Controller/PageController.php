@@ -71,9 +71,9 @@ class PageController
     public function saveAction(Request $req, Response $res)
     {
         $page = new \Frgmnt\Model\Page();
-        $page->id = (int) $req->getPost('id');
-        $page->parent_id = $req->getPost('parent_id') ?: null;
-        $page->title = $req->getPost('title');
+        $page->getId() = (int) $req->getPost('id');
+        $page->getParent_id() = $req->getPost('parent_id') ?: null;
+        $page->getTitle() = $req->getPost('title');
         $this->repo->save($page);
         $res->redirect('/core/pages');
     }

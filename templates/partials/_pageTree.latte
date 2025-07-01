@@ -12,7 +12,7 @@
   {foreach $nodes as $page}
     <li class="page-item">
       <a class="page-link" href="#" data-id="{$page->id}">
-        {$page->title|escape}
+        {$page->getTitle()|escape}
       </a>
       {if !empty($page->children)}
         {include 'pageTree.latte' nodes => $page->children}
