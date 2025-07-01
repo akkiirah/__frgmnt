@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * Licensed under JNK 1.1 — an anti-capitalist, share-alike license.
@@ -12,36 +13,13 @@
 
 namespace Frgmnt\Model;
 
-class Page
+class Page extends BaseModel
 {
-    protected ?int $id = null;
     protected ?int $parentId = null;
     protected string $title = '';
     protected string $slug = '';
     protected array $contentElements = [];
-    protected string $createdAt = '';
-    protected string $updatedAt = '';
-
-
-    public function getUpdatedAt(): string
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt($updatedAt): void
-    {
-        $this->updatedAt = $updatedAt;
-    }
-
-    public function getCreatedAt(): string
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt($createdAt): void
-    {
-        $this->createdAt = $createdAt;
-    }
+    protected array $children = [];
 
     public function getContentElements(): array
     {
@@ -63,6 +41,21 @@ class Page
         $this->slug = $slug;
     }
 
+    public function clearChildren(): void
+    {
+        $this->children = [];
+    }
+
+    public function addChild(Page $child): void
+    {
+        $this->children[] = $child;
+    }
+
+    public function getChildren(): array
+    {
+        return $this->children;
+    }
+
     public function getTitle(): string
     {
         return $this->title;
@@ -81,15 +74,5 @@ class Page
     public function setParentId($parentId): void
     {
         $this->parentId = $parentId;
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function setId($id): void
-    {
-        $this->id = $id;
     }
 }

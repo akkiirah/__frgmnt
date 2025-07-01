@@ -42,11 +42,11 @@ class LatteViewRenderer
         $this->latte = new \Latte\Engine;
         LatteFilterProvider::registerFilters($this->latte);
         $this->latte->setTempDirectory(path: \Frgmnt\Config\Constants::DIR_CACHE);
-        $this->fileStart = \Frgmnt\Config\Constants::DIR_TEMPLATES . 'start.latte';
-        // $this->fileList = Constants::DIR_TEMPLATES . 'list.latte';
-        // $this->fileDetail = Constants::DIR_TEMPLATES . 'detail.latte';
-        // $this->fileLogin = Constants::DIR_TEMPLATES . 'login.latte';
-        // $this->fileRegister = Constants::DIR_TEMPLATES . 'register.latte';
+        $this->fileStart = \Frgmnt\Config\Constants::DIR_TEMPLATES_FRONTEND . '/start.latte';
+        // $this->fileList = Constants::DIR_TEMPLATES_BACKEND. 'list.latte';
+        // $this->fileDetail = Constants::DIR_TEMPLATES_BACKEND. 'detail.latte';
+        // $this->fileLogin = Constants::DIR_TEMPLATES_BACKEND. 'login.latte';
+        // $this->fileRegister = Constants::DIR_TEMPLATES_BACKEND. 'register.latte';
     }
     /**
      * Render a Latte template and return the output as string.

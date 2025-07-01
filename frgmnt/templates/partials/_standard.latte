@@ -10,34 +10,34 @@
 
 <form method="post" action="/core/content/save">
     <fieldset>
-        <legend>{$element['internal_name']}</legend>
+        <legend>{$element->getInternalName()}</legend>
         <div class="form-extras">
-            <span>id: {$element['id']}</span>
-            <span>pid: {$element['page_id']}</span>
+            <span>id: {$element->getId()}</span>
+            <span>pid: {$element->getPageId()}</span>
         </div>
 
         {* TODO: switch to dropdown with all available options and reload *}
         <label for="type">Typ:</label>
-        <input type="text" name="type" value="{$element['type']}"> 
+        <input type="text" name="type" value="{$element->getType()}"> 
 
         <label for="position">Position:</label>
-        <input type="number" name="position" value="{$element['position']}">
+        <input type="number" name="position" value="{$element->getPosition()}">
 
         <label for="headline">Headline:</label>
-        <input type="text" name="headline" value="{$element['headline']}">
+        <input type="text" name="headline" value="{$element->getHeadline()}">
 
         <label for="subheadline">Subheadline:</label>
-        <input type="text" name="subheadline" value="{$element['subheadline']}">
+        <input type="text" name="subheadline" value="{$element->getSubheadline()}">
 
         <label for="body">Content:</label>
-        <textarea name="body">{$element['body']}</textarea>
+        <textarea name="body">{$element->getBody()}</textarea>
 
         <label for="image_path">Imagepath:</label>
-        <input type="text" name="image_path" value="{$element['image_path']}">
+        <input type="text" name="image_path" value="{$element->getImagePath()}">
 
         {* TODO: show/hide depending on type and add functionality to parse json *}
         <label for="special_data_json">Json Data:</label>
-        <textarea name="special_data_json">{$element['special_data_json']}</textarea>
+        <textarea name="special_data_json">{$element->getSpecialDataJson()}</textarea>
 
         <button type="submit">Save</button>
     </fieldset>

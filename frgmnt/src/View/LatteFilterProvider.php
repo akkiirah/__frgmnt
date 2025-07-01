@@ -23,7 +23,7 @@ namespace Frgmnt\View;
 class LatteFilterProvider
 {
     /**
-     *C onstructs URLs using the specified controller, action, and parameters
+     * Constructs URLs using the specified controller, action, and parameters
      * in a concise, consistent format:
      * 
      * ?controller={controller}&action={action}&params=[key1:value1,key2:value2,...]

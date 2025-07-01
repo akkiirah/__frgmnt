@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * Licensed under JNK 1.1 — an anti-capitalist, share-alike license.
@@ -14,21 +15,17 @@ namespace Frgmnt\Engine;
 
 use Frgmnt\Http\Request;
 use Frgmnt\Http\Response;
-use Frgmnt\Container;
-
 use Frgmnt\Controller\SiteController;
 use Frgmnt\Controller\AuthController;
 use Frgmnt\Controller\PageController;
+use Frgmnt\Container;
 use Frgmnt\Repository\PageRepository;
 
 /**
- * Routes HTTP requests to the appropriate controller and action.
+ * Router dispatches HTTP requests to controller actions.
  *
- * Determines the target controller, action, and parameters from the HTTP request.
- * Instantiates the controller and calls the corresponding action method with the parsed parameters.
- * Outputs error messages if the controller or action does not exist.
- *
- * @package Engine
+ * Static routes are defined explicitly, and dynamic page routes
+ * are built based on the page hierarchy from the database.
  */
 class Router
 {
@@ -37,7 +34,13 @@ class Router
     private Container $container;
     private array $routes = [];
 
-    // 1) Konstruktor übernimmt nun Container
+    /**
+     * Construct the router with dependencies.
+     *
+     * @param Request   $request   The HTTP request object
+     * @param Response  $response  The HTTP response handler
+     * @param Container $container The DI container for services
+     */
     public function __construct(Request $request, Response $response, Container $container)
     {
         $this->request = $request;
@@ -46,90 +49,120 @@ class Router
     }
 
     /**
-     * Define all application routes.
+     * Define all static and dynamic routes for the application.
+     *
+     * @return void
      */
     public function defineRoutes(): void
     {
-        // Public site
+        // Public site routes
         $this->addRoute('GET', '/', [SiteController::class, 'startAction']);
 
-        // Authentication
+        // Authentication routes
         $this->addRoute('GET', '/frgmnt', [AuthController::class, 'loginAction']);
         $this->addRoute('POST', '/frgmnt', [AuthController::class, 'loginAction']);
 
-        // Page management in admin
+        // Backend page management
         $this->addRoute('GET', '/frgmnt/pages', [PageController::class, 'listAction']);
         $this->addRoute('GET', '/frgmnt/pages/edit', [PageController::class, 'editAction']);
-        // $this->addRoute('POST', '/frgmnt/pages/save', [PageController::class, 'saveAction']);
+        $this->addRoute('POST', '/frgmnt/pages/save', [PageController::class, 'saveAction']);
 
+        // Dynamic content pages from database
         $this->defineDynamicPageRoutes();
     }
 
+    /**
+     * Register a single route and handler.
+     *
+     * @param string $method  HTTP method (GET, POST, etc.)
+     * @param string $path    URI path to match
+     * @param array  $handler [ControllerClass::class, 'actionName']
+     *
+     * @return void
+     */
+    private function addRoute(string $method, string $path, array $handler): void
+    {
+        $key = rtrim($path, '/') ?: '/';
+        $this->routes[$method][$key] = $handler;
+    }
+
+    /**
+     * Build dynamic routes based on the page hierarchy.
+     *
+     * Fetches all pages, constructs a tree of parent/child relations,
+     * and registers a GET route for each node's slug path.
+     *
+     * @return void
+     */
     private function defineDynamicPageRoutes(): void
     {
-        $repo = new PageRepository();
+        $repo = $this->container->get('pageRepo');
         $pages = $repo->fetchAll();
 
-        // 2.1) Aufbau eines ID-basierten Lookup-Trees
+        // Build lookup map and clear children
         $lookup = [];
         foreach ($pages as $p) {
-            $p->children = [];
+            $p->clearChildren();
             $lookup[$p->getId()] = $p;
         }
+
+        // Attach children to their parents
         $tree = [];
         foreach ($lookup as $p) {
-            if ($p->getParentId() && isset($lookup[$p->getParentId()])) {
-                $lookup[$p->getParentId()]->children[] = $p;
+            if ($p->getParentId() !== null && isset($lookup[$p->getParentId()])) {
+                $lookup[$p->getParentId()]->addChild($p);
             } else {
                 $tree[] = $p;
             }
         }
 
-        // 2.2) Top-Level durchgehen: Home-Slug überspringen
+        // Recursively register routes for the tree
         foreach ($tree as $node) {
             if ($node->getSlug() === 'home') {
-                // Home selbst bleibt unter "/", Kinder starten bei ""
-                $this->addPageRoutesRecursive($node->children, '');
+                $this->addPageRoutesRecursive($node->getChildren(), '');
             } else {
-                // alle anderen Top-Level-Seiten bekommen "/slug"
-                $this->addRoute('GET', '/' . $node->getSlug(), [SiteController::class, 'showAction']);
-                $this->addPageRoutesRecursive($node->children, '/' . $node->getSlug());
+                $this->addPageRoutesRecursive([$node], '');
             }
         }
     }
 
+    /**
+     * Recursively register GET routes for each page node.
+     *
+     * @param array  $nodes  List of Page nodes to register
+     * @param string $prefix URI prefix based on parent path
+     *
+     * @return void
+     */
     private function addPageRoutesRecursive(array $nodes, string $prefix): void
     {
         foreach ($nodes as $node) {
             $path = $prefix . '/' . $node->getSlug();
             $this->addRoute('GET', $path, [SiteController::class, 'showAction']);
-            if ($node->children) {
-                $this->addPageRoutesRecursive($node->children, $path);
+            if ($node->getChildren()) {
+                $this->addPageRoutesRecursive($node->getChildren(), $path);
             }
         }
     }
 
     /**
-     * Register a new route.
-     */
-    private function addRoute(string $method, string $path, array $handler): void
-    {
-        $normalized = rtrim($path, '/') ?: '/';
-        $this->routes[$method][$normalized] = $handler;
-    }
-
-    /**
-     * Dispatch the current request to the matching handler.
+     * Match the incoming request and invoke the appropriate controller action.
+     *
+     * @return void
      */
     public function dispatch(): void
     {
         $method = $this->request->getMethod();
-        $path = rtrim($this->request->getUri(), '/') ?: '/';
+
+        $uri = $this->request->getUri();
+        $path = parse_url($uri, PHP_URL_PATH);
+        $path = rtrim($path, '/') ?: '/';
 
         if (isset($this->routes[$method][$path])) {
-            [$controllerClass, $action] = $this->routes[$method][$path];
-            // Controller jetzt per DI erzeugen
-            $controller = new $controllerClass(
+            [$class, $action] = $this->routes[$method][$path];
+
+            // Instantiate controller via Dependency Injection
+            $controller = new $class(
                 $this->request,
                 $this->response,
                 $this->container->get('view'),

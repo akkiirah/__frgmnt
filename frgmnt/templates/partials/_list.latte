@@ -10,5 +10,16 @@
 
 <div class="sidebar">
     <h1>Overview</h1>
-    {include '_pageTree.latte' nodes => $pages}
+        <ul class="page-tree">
+            {foreach $pages as $page}
+                <li class="page-item">
+                    <a class="page-link" href="#" data-id="{$page->getId()}">
+                        {$page->getTitle()|escape}
+                    </a>
+                    {if !empty($page->children)}
+                        {include 'pageTree.latte' nodes => $page->children}
+                    {/if}
+                </li>
+            {/foreach}
+    </ul>
 </div>

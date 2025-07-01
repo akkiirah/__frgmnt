@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * Licensed under JNK 1.1 — an anti-capitalist, share-alike license.
@@ -18,6 +19,11 @@ use \PDO;
 use Frgmnt\Service\AuthService;
 use Frgmnt\View\LatteViewRenderer;
 
+
+/**
+ * BaseController provides common dependencies and functionality for all controllers.
+ * Injected services include HTTP request/response, view rendering, database connection, and authentication.
+ */
 abstract class BaseController
 {
     protected Request $req;
@@ -26,6 +32,15 @@ abstract class BaseController
     protected PDO $db;
     protected AuthService $auth;
 
+    /**
+     * Construct the controller with common services.
+     *
+     * @param Request      $req        The current HTTP request
+     * @param Response     $res        The HTTP response object
+     * @param LatteViewRenderer $view  Template engine service
+     * @param PDO          $db         Database connection
+     * @param AuthService  $auth       Authentication service
+     */
     public function __construct(
         Request $req,
         Response $res,

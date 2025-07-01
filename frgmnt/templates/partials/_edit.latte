@@ -10,9 +10,9 @@
 
 <div class="editor" id="editor-panel">
     {if isset($page)}
-        {if $page->content_elements}
-            {foreach $page->content_elements as $element}
-                {if $element['type'] === 'standard'}
+        {if $page->getContentElements()}
+            {foreach $page->getContentElements() as $element}
+                {if $element->getType() === 'standard'}
                     {include '_standard.latte' element => $element}
                 {else}
                     <p>custom element</p>

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * Licensed under JNK 1.1 — an anti-capitalist, share-alike license.
@@ -12,40 +13,56 @@
 
 namespace Frgmnt\Http;
 
+/**
+ * Handles HTTP response status, headers, and output.
+ */
 class Response
 {
-    public function redirect(string $uri, int $status = 302): void
-    {
-        // HTTP-Status-Header sauber setzen
-        header(sprintf('HTTP/1.1 %d %s', $status, $this->getStatusText($status)), true, $status);
-        header('Location: ' . $uri);
-        exit;  // Stopp direkt hier
-    }
-
-    private function getStatusText(int $status): string
-    {
-        $map = [
-            301 => 'Moved Permanently',
-            302 => 'Found',
-            303 => 'See Other',
-            307 => 'Temporary Redirect',
-            308 => 'Permanent Redirect',
-        ];
-        return $map[$status] ?? '';
-    }
-
-    public function addHeader(string $name, string $value): void
-    {
-        header(sprintf('%s: %s', $name, $value));
-    }
-
+    /**
+     * Set the HTTP status code.
+     *
+     * @param int $code
+     * @return void
+     */
     public function setStatus(int $code): void
     {
         http_response_code($code);
     }
 
+    /**
+     * Add an HTTP header to the response.
+     *
+     * @param string $name  Header name
+     * @param string $value Header value
+     * @return void
+     */
+    public function addHeader(string $name, string $value): void
+    {
+        header("$name: $value");
+    }
+
+    /**
+     * Write content to the response body.
+     *
+     * @param string $content
+     * @return void
+     */
     public function write(string $content): void
     {
         echo $content;
+    }
+
+    /**
+     * Redirect to another URI.
+     *
+     * @param string $uri    Target URI
+     * @param int    $status HTTP status code (default 302)
+     * @return void
+     */
+    public function redirect(string $uri, int $status = 302): void
+    {
+        $this->setStatus($status);
+        $this->addHeader('Location', $uri);
+        exit;
     }
 }

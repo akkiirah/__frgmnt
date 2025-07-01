@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * Licensed under JNK 1.1 — an anti-capitalist, share-alike license.
@@ -12,24 +13,40 @@
 
 namespace Frgmnt\Controller;
 
-use Frgmnt\Service\AuthService;
-use Frgmnt\View\LatteViewRenderer;
 use Frgmnt\Http\Request;
 use Frgmnt\Http\Response;
+use Frgmnt\Service\AuthService;
 
-class AuthController
+/**
+ * AuthController handles user authentication.
+ */
+class AuthController extends BaseController
 {
-    public function loginAction(Request $req, Response $res)
+    /**
+     * Display the login form or process login credentials.
+     *
+     * @return void
+     */
+    public function loginAction(): void
     {
-        if ($req->getMethod() === 'POST') {
-            $auth = new AuthService();
-            if ($auth->login($req->getPost('user'), $req->getPost('pass'))) {
-                $res->redirect('/frgmnt/pages');
+        if ($this->req->getMethod() === 'POST') {
+            $username = $this->req->getPost('user');
+            $password = $this->req->getPost('pass');
+
+            if ($this->auth->login($username, $password)) {
+                $this->res->redirect('/frgmnt/pages');
                 return;
             }
-            $res->write('Login failed');
+
+            $this->res->write('Login failed');
             return;
         }
-        echo (new LatteViewRenderer())->render('pages/login.latte', []);
+
+        // Render login template
+        $html = $this->view->render(
+            \Frgmnt\Config\Constants::DIR_TEMPLATES_BACKEND . 'login.latte',
+            []
+        );
+        $this->res->write($html);
     }
 }

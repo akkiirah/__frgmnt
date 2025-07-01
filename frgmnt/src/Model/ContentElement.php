@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * Licensed under JNK 1.1 — an anti-capitalist, share-alike license.
@@ -12,9 +13,11 @@
 
 namespace Frgmnt\Model;
 
-class ContentElement
+/**
+ * Represents a content element associated with a page.
+ */
+class ContentElement extends BaseModel
 {
-    protected ?int $id = null;
     protected ?int $pageId = null;
     protected ?int $position = null;
     protected ?string $internalName = null;
@@ -24,22 +27,12 @@ class ContentElement
     protected ?string $body = null;
     protected ?string $imagePath = null;
     protected ?string $specialDataJson = null;
-    protected ?string $createdAt = null;
-    protected ?string $updatedAt = null;
 
-    /**
-     * Get the value of type
-     */
     public function getType()
     {
         return $this->type;
     }
 
-    /**
-     * Set the value of type
-     *
-     * @return  self
-     */
     public function setType($type)
     {
         $this->type = $type;
@@ -47,164 +40,74 @@ class ContentElement
         return $this;
     }
 
-    /**
-     * Get the value of internalName
-     */
     public function getInternalName()
     {
         return $this->internalName;
     }
 
-    /**
-     * Set the value of internalName
-     *
-     * @return  self
-     */
-    public function setInternalName($internalName)
+    public function setInternalName($internalName): void
     {
         $this->internalName = $internalName;
-
-        return $this;
     }
 
-    /**
-     * Get the value of position
-     */
-    public function getPosition()
+    public function getPosition(): ?int
     {
         return $this->position;
     }
 
-    /**
-     * Set the value of position
-     *
-     * @return  self
-     */
-    public function setPosition($position)
+    public function setPosition($position): void
     {
         $this->position = $position;
-
-        return $this;
     }
 
-    /**
-     * Get the value of pageId
-     */
-    public function getPageId()
+    public function getPageId(): ?int
     {
         return $this->pageId;
     }
 
-    /**
-     * Set the value of pageId
-     *
-     * @return  self
-     */
-    public function setPageId($pageId)
+    public function setPageId($pageId): void
     {
         $this->pageId = $pageId;
-
-        return $this;
     }
 
-    /**
-     * Get the value of id
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set the value of id
-     *
-     * @return  self
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of headline
-     */
-    public function getHeadline()
+    public function getHeadline(): ?string
     {
         return $this->headline;
     }
 
-    /**
-     * Set the value of headline
-     *
-     * @return  self
-     */
-    public function setHeadline($headline)
+    public function setHeadline($headline): void
     {
         $this->headline = $headline;
-
-        return $this;
     }
 
-    /**
-     * Get the value of subheadline
-     */
-    public function getSubheadline()
+    public function getSubheadline(): ?string
     {
         return $this->subheadline;
     }
 
-    /**
-     * Set the value of subheadline
-     *
-     * @return  self
-     */
-    public function setSubheadline($subheadline)
+    public function setSubheadline($subheadline): void
     {
         $this->subheadline = $subheadline;
-
-        return $this;
     }
 
-    /**
-     * Get the value of body
-     */
-    public function getBody()
+    public function getBody(): ?string
     {
         return $this->body;
     }
 
-    /**
-     * Set the value of body
-     *
-     * @return  self
-     */
-    public function setBody($body)
+    public function setBody($body): void
     {
         $this->body = $body;
-
-        return $this;
     }
 
-    /**
-     * Get the value of imagePath
-     */
-    public function getImagePath()
+    public function getImagePath(): ?string
     {
         return $this->imagePath;
     }
 
-    /**
-     * Set the value of imagePath
-     *
-     * @return  self
-     */
-    public function setImagePath($imagePath)
+    public function setImagePath($imagePath): void
     {
         $this->imagePath = $imagePath;
-
-        return $this;
     }
 
     public function getSpecialDataJson(): ?array
@@ -220,7 +123,6 @@ class ContentElement
         return $data;
     }
 
-    // Setter: nimmt Array entgegen, speichert intern als JSON-String
     public function setSpecialDataJson(array $data): void
     {
         $json = json_encode($data);
@@ -228,61 +130,5 @@ class ContentElement
             throw new \RuntimeException('JSON encoding failed: ' . json_last_error_msg());
         }
         $this->specialDataJson = $json;
-    }
-
-    /**
-     * Get the value of createdAt
-     */
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * Set the value of createdAt
-     *
-     * @return  self
-     */
-    public function setCreatedAt($createdAt)
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of updatedAt
-     */
-    public function getUpdatedAt()
-    {
-        return $this->updatedAt;
-    }
-
-    /**
-     * Set the value of updatedAt
-     *
-     * @return  self
-     */
-    public function setUpdatedAt($updatedAt)
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    public function fillFromArray(array $data): void
-    {
-        foreach ($data as $key => $value) {
-            $property = $this->snakeToCamel($key);
-            if (property_exists($this, $property)) {
-                $this->$property = $value;
-            }
-        }
-    }
-
-    protected function snakeToCamel(string $string): string
-    {
-        $string = strtolower($string);
-        return lcfirst(str_replace('_', '', ucwords($string, '_')));
     }
 }

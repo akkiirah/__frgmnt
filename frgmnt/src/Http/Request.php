@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * Licensed under JNK 1.1 — an anti-capitalist, share-alike license.
@@ -12,43 +13,63 @@
 
 namespace Frgmnt\Http;
 
+/**
+ * Represents an HTTP request and provides methods
+ * to access method, URI, parameters, and AJAX status.
+ */
 class Request
 {
-    private array $get;
-    private array $post;
-    private array $server;
-
-    public function __construct(array $get = null, array $post = null, array $server = null)
-    {
-        $this->get = $get ?? $_GET;
-        $this->post = $post ?? $_POST;
-        $this->server = $server ?? $_SERVER;
-    }
-
+    /**
+     * Get the HTTP request method.
+     *
+     * @return string e.g. 'GET', 'POST'
+     */
     public function getMethod(): string
     {
-        return strtoupper($this->server['REQUEST_METHOD'] ?? 'GET');
+        return $_SERVER['REQUEST_METHOD'] ?? 'GET';
     }
 
+    /**
+     * Get the current request URI.
+     *
+     * @return string URI path and query string
+     */
     public function getUri(): string
     {
-        $uri = $this->server['REQUEST_URI'] ?? '/';
-        return strtok($uri, '?');
+        return $_SERVER['REQUEST_URI'] ?? '/';
     }
 
+    /**
+     * Retrieve a query parameter by key.
+     *
+     * @param string $key
+     * @param mixed  $default Default value if key is missing
+     * @return mixed
+     */
     public function getQuery(string $key, $default = null)
     {
-        return $this->get[$key] ?? $default;
+        return $_GET[$key] ?? $default;
     }
 
+    /**
+     * Retrieve POST data by key.
+     *
+     * @param string $key
+     * @param mixed  $default Default value if key is missing
+     * @return mixed
+     */
     public function getPost(string $key, $default = null)
     {
-        return $this->post[$key] ?? $default;
+        return $_POST[$key] ?? $default;
     }
 
+    /**
+     * Determine if the request was made via AJAX.
+     *
+     * @return bool
+     */
     public function isAjax(): bool
     {
-        return isset($this->server['HTTP_X_REQUESTED_WITH']) &&
-            strtolower($this->server['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+        return strtolower($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'xmlhttprequest';
     }
 }
